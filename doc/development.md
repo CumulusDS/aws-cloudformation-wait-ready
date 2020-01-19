@@ -124,7 +124,7 @@ First, ensure that all dependencies are installed:
 yarn
 ```
 
-Next, go to WebStorm > Preferences > Tools > File Watchers, and press the import icon. Load the file watchers from [prettier-watchers-unix.xml](doc/prettier-watchers-unix.xml) or [prettier-watchers-pc.xml](doc/prettier-watchers-pc.xml), depending on your system. Finally, save the changes. This configuration should apply Prettier to all supported file types.
+Next, go to WebStorm > Preferences > Tools > File Watchers, and press the import icon. Load the file watchers from [prettier-watchers-unix.xml](prettier-watchers-unix.xml) or [prettier-watchers-pc.xml](prettier-watchers-pc.xml), depending on your system. Finally, save the changes. This configuration should apply Prettier to all supported file types.
 
 Alternatively, add File Watchers one-by-one by pressing the "+" button and setting the following properties:
 
@@ -138,7 +138,7 @@ Alternatively, add File Watchers one-by-one by pressing the "+" button and setti
 - Working Directory: `$ProjectFileDir$`
 - Output Paths to Refresh: `$FilePathRelativeToProjectRoot$`
 - Advanced Options: only select "Trigger the watcher on external change"
-  ![File Watcher Screenshot](doc/webstorm-file-watcher-prettier.png)
+  ![File Watcher Screenshot](webstorm-file-watcher-prettier.png)
 
 Then click "Apply".
 
@@ -164,7 +164,7 @@ Flow is configured to use [flow-typed](https://github.com/flowtype/flow-typed) r
 
 The eslint-plugin-flowtype package integrates ESLint with Flow.
 
-The WebStorm IDE uses flow to improve navigation, code completion and type hinting. It can also show type-checking errors inline, just like syntax or lint errors. [Configure WebStorm for Flow](https://blog.jetbrains.com/webstorm/2016/11/using-flow-in-webstorm/) by using Preferences / Languages & Frameworks / Javascript. Set the language version to Flow and enable "Type checking". ![WebStorm Flow Configuration](doc/webstorm-flow.png)
+The WebStorm IDE uses flow to improve navigation, code completion and type hinting. It can also show type-checking errors inline, just like syntax or lint errors. [Configure WebStorm for Flow](https://blog.jetbrains.com/webstorm/2016/11/using-flow-in-webstorm/) by using Preferences / Languages & Frameworks / Javascript. Set the language version to Flow and enable "Type checking". ![WebStorm Flow Configuration](webstorm-flow.png)
 
 ### Lint
 
@@ -194,7 +194,7 @@ ESLint is used to enforce the [Airbnb Style Guid](https://github.com/airbnb/java
 
 The eslint-plugin-flowtype package integrates ESLint with Flow.
 
-The WebStorm IDE uses flow to improve navigation, code completion and type hinting. It can also show type-checking errors inline, just like syntax or lint errors. [Configure WebStorm for Flow](https://blog.jetbrains.com/webstorm/2016/11/using-flow-in-webstorm/) by using Preferences / Languages & Frameworks / Javascript. Set the language version to Flow and enable "Type checking". ![WebStorm Flow Configuration](doc/webstorm-flow.png)
+The WebStorm IDE uses flow to improve navigation, code completion and type hinting. It can also show type-checking errors inline, just like syntax or lint errors. [Configure WebStorm for Flow](https://blog.jetbrains.com/webstorm/2016/11/using-flow-in-webstorm/) by using Preferences / Languages & Frameworks / Javascript. Set the language version to Flow and enable "Type checking". ![WebStorm Flow Configuration](webstorm-flow.png)
 
 ### flow-typed
 
