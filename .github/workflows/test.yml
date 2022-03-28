@@ -40,7 +40,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-        if: always()
+        if: always() && github.actor != 'dependabot[bot]'
       - name: Build
         run: yarn build
       - name: Publish
@@ -52,19 +52,3 @@ jobs:
           name: var
           path: var
         if: always()
-  yarn:
-    name: Yarn Lock Changes
-    runs-on: ubuntu-20.04
-    timeout-minutes: 5
-    if: github.event_name == 'pull_request'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Yarn Lock Changes
-        uses: Simek/yarn-lock-changes@main
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          collapsibleThreshold: '25'
-          failOnDowngrade: 'false'
-          path: 'yarn.lock'
-          updateComment: 'true'
