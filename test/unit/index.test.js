@@ -91,3 +91,34 @@ describe("Stack is updating", () => {
     });
   });
 });
+
+describe("Stack is missing", () => {
+  it("returns without describing events", async () => {
+    const error = new Error("Stack with id MyStackName does not exist");
+    // $FlowFixMe
+    error.code = "ValidationError";
+    const describeStacks = jest.fn().mockReturnValue({ promise: jest.fn().mockRejectedValue(error) });
+    const describeStackEvents = jest.fn().mockReturnValueOnce({ promise: jest.fn().mockRejectedValue(error) });
+
+    const cloudFormation = { describeStacks, describeStackEvents };
+    const params = { StackName: "stack-name" };
+    await cfnWaitReady(cloudFormation, params);
+    expect(describeStackEvents).not.toBeCalled();
+  });
+});
+
+describe("API has unexpected error", () => {
+  const error = new Error("Internal server error");
+  // $FlowFixMe
+  error.code = "InternalServerError";
+
+  const describeStacks = jest.fn().mockReturnValue({ promise: jest.fn().mockRejectedValue(error) });
+
+  const describeStackEvents = jest.fn().mockReturnValueOnce({ promise: jest.fn().mockRejectedValue(error) });
+
+  it("rejects", () => {
+    const cloudFormation = { describeStacks, describeStackEvents };
+    const params = { StackName: "stack-name" };
+    return expect(cfnWaitReady(cloudFormation, params)).rejects.toBe(error);
+  });
+});

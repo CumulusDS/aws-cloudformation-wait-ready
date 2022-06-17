@@ -17,6 +17,7 @@
     "package.json"
   ],
   "scripts": {
+    "aws-cloudformation-wait-ready": "node bin/aws-cloudformation-wait-ready.js",
     "build": "run-p build:babel build:flow-copy-source build:license-checker",
     "build:babel": "babel src --out-dir lib --ignore test.js",
     "build:flow-copy-source": "flow-copy-source --ignore test.js src lib",
@@ -28,7 +29,7 @@
     "publish:major": "run-s version:major git:push",
     "sites": "node bin/sites.js",
     "test": "run-p --aggregate-output test:**",
-    "test:flow:coverage-report": "flow-coverage-report -i 'src/**/*.js' -x 'test/**/*.js' -t html -t text --threshold 100 --output-dir var/coverage/flow",
+    "test:flow:coverage-report": "flow-coverage-report -i 'src/**/*.js' -x 'test/**/*.js' -t html -t text --threshold 98 --output-dir var/coverage/flow",
     "test:flow:status": "flow status",
     "test:jest": "jest --color",
     "test:lint": "eslint *.js src test",

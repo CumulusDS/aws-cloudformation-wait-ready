@@ -56,34 +56,44 @@ export default async function(cloudFormation: CloudFormation, params: { StackNam
     return events.reverse();
   };
 
-  const {
-    Stacks: [{ StackStatus }]
-  } = await cloudFormation.describeStacks({ StackName }).promise();
-  if (isDone(StackStatus)) {
-    console.log(chalk`{green Ready}`);
-    return;
-  }
-
-  let LatestEventId = "";
-  let LatestStatus = "";
-  do {
-    const events = await describeStackEventsSince(LatestEventId);
-
-    for (const event of events) {
-      const { ResourceStatusReason } = event;
-
-      if (isStackEvent(event)) {
-        console.log(chalk`{bold {yellow ${event.Timestamp.toISOString()}} ${event.ResourceStatus}}`);
-        LatestStatus = event.ResourceStatus;
-      } else {
-        console.log(chalk`{yellow ${event.Timestamp.toISOString()}} ${event.ResourceStatus}`);
-      }
-      if (ResourceStatusReason != null) console.log(chalk`${ResourceStatusReason}\n`);
-
-      LatestEventId = event.EventId;
+  try {
+    const {
+      Stacks: [{ StackStatus }]
+    } = await cloudFormation.describeStacks({ StackName }).promise();
+    if (isDone(StackStatus)) {
+      console.log(chalk`{green Ready}`);
+      return;
     }
 
-    if (!isDone(LatestStatus)) await sleep(10000);
-  } while (!isDone(LatestStatus));
+    let LatestEventId = "";
+    let LatestStatus = "";
+
+    do {
+      const events = await describeStackEventsSince(LatestEventId);
+
+      for (const event of events) {
+        const { ResourceStatusReason } = event;
+
+        if (isStackEvent(event)) {
+          console.log(chalk`{bold {yellow ${event.Timestamp.toISOString()}} ${event.ResourceStatus}}`);
+          LatestStatus = event.ResourceStatus;
+        } else {
+          console.log(chalk`{yellow ${event.Timestamp.toISOString()}} ${event.ResourceStatus}`);
+        }
+        if (ResourceStatusReason != null) console.log(chalk`${ResourceStatusReason}\n`);
+
+        LatestEventId = event.EventId;
+      }
+
+      if (!isDone(LatestStatus)) await sleep(10000);
+    } while (!isDone(LatestStatus));
+  } catch (error) {
+    if (error.code === "ValidationError") {
+      // Stack with id MyStackName does not exist
+      console.log(chalk`{green Does Not Exist}`);
+    } else {
+      throw error;
+    }
+  }
   console.log(chalk`{green Ready}`);
 }
