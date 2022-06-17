@@ -13,7 +13,7 @@ yarn add --dev @cumulusds/aws-cloudformation-wait-ready
 To use it:
 
 ```
-yarn aws-cloudformation-wait-ready --region=us-east-1 --stack-name=MyStackName
+yarn aws-cloudformation-wait-ready --region us-east-1 --stack-name MyStackName
 ```
 
 # Development
