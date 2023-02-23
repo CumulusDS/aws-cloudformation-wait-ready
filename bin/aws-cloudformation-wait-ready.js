@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-// eslint-disable-next-line import/no-extraneous-dependencies
 const parseArgs = require("minimist");
 const { CloudFormation } = require("aws-sdk");
 const process = require("process");
