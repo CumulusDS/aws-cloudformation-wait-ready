@@ -5,9 +5,7 @@ on:
 jobs:
   publish:
     name: Publish
-    runs-on: ubuntu-20.04
-    needs: unit
-    if: github.event_name == 'release'
+    runs-on: ubuntu-22.04
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v3
