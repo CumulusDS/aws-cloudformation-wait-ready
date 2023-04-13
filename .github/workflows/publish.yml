@@ -1,0 +1,26 @@
+name: Publish
+on:
+  release:
+    types: [released]
+jobs:
+  publish:
+    name: Publish
+    runs-on: ubuntu-20.04
+    needs: unit
+    if: github.event_name == 'release'
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+        with:
+          node: ${{ matrix.node }}
+          npmToken: ${{ secrets.NODE_AUTH_TOKEN }}
+      - name: Build
+        run: yarn build
+      - run: |
+          echo "//registry.npmjs.org/:_authToken=$TOKEN" > ~/.npmrc
+        env:
+          TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN_AWS_CLOUDFORMATION_WAIT_READY }}
+      - name: Publish
+        run: npm publish
+

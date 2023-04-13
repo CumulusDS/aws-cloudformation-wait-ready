@@ -16,45 +16,20 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: [12, 14, 16]
+        node: [14, 16, 18, 19]
     timeout-minutes: 10
     steps:
-      - name: Setup
-        uses: CumulusDS/workflow-setup-action@v1
-        if: github.event_name != 'pull_request_target'
+      - uses: actions/checkout@v3
         with:
-          nodeVersion: ${{ matrix.node }}
-          npmToken: ${{ secrets.NODE_AUTH_TOKEN }}
-          fetch-depth: 0
-      - name: Setup (dependabot)
-        uses: CumulusDS/workflow-setup-action@v1
-        if: github.event_name == 'pull_request_target'
+          ref: ${{ github.event.pull_request.head.sha || '' }}
+      - uses: ./.github/actions/setup
         with:
-          nodeVersion:  ${{ matrix.node }}
+          node: ${{ matrix.node }}
           npmToken: ${{ secrets.NODE_AUTH_TOKEN }}
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 0
-      - name: Yarn Test
-        uses: CumulusDS/yarn-test-action@v1
-      - name: Upload artifact; Notify Slack
-        if: always()
-        uses: Cumulusds/unit-end-action@v1
-  publish:
-    name: Publish
-    runs-on: ubuntu-20.04
-    needs: unit
-    if: github.event_name == 'release'
-    timeout-minutes: 10
-    steps:
-      - name: Setup
-        uses: CumulusDS/workflow-setup-action@v1
-        if: github.event_name != 'pull_request_target'
+      - run: yarn build:license-checker
+      - run: yarn flow start
+      - run: yarn test
+      - uses: actions/upload-artifact@v3
         with:
-          nodeVersion: 14
-          npmToken: ${{ secrets.NODE_AUTH_TOKEN }}
-          fetch-depth: 0
-      - name: Build
-        run: yarn build
-      - name: Publish
-        run: npm publish
-
+          name: upload-artifacts
+          path: var

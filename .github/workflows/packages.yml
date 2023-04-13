@@ -11,14 +11,7 @@ jobs:
     runs-on: ubuntu-20.04
     timeout-minutes: 5
     steps:
-      - name: Yarn Lock Changes
-        uses: CumulusDS/yarn-lock-changes-action@v1
+      - uses: actions/checkout@v3
+      - uses: Simek/yarn-lock-changes@v0.11.1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-  deprecation:
-    name: Package Deprecations
-    timeout-minutes: 5
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Check for deprecated packages
-        uses: CumulusDS/deprecated-packages-action@v1
