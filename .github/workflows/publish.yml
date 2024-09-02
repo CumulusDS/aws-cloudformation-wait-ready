@@ -16,9 +16,9 @@ jobs:
       - name: Build
         run: yarn build
       - run: |
-          echo "//registry.npmjs.org/:_authToken=$TOKEN" > ~/.npmrc
+          yarn config set npmAuthToken ${{ inputs.npmToken }} --home
         env:
           TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN_AWS_CLOUDFORMATION_WAIT_READY }}
       - name: Publish
-        run: npm publish
+        run: yarn npm publish
 

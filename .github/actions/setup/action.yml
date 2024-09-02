@@ -13,16 +13,22 @@ runs:
     - uses: actions/setup-node@v3
       with:
         node-version: ${{ inputs.node }}
-    - id: cache
-      run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+    - name: Get yarn v3 cache directory
+      id: get-yarn3-cache
+      run: |
+        echo "::group::Get yarn cache directory"
+        echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
+        echo "::endgroup::"
       shell: bash
-    - uses: actions/cache@v3
+    - name: Restore yarn cache directory
+      id: restore-yarn-cache
+      uses: actions/cache@v3
       with:
-        path: ${{ steps.cache.outputs.dir }}
+        path: ${{ steps.get-yarn3-cache.outputs.dir }}
         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
         restore-keys: |
           ${{ runner.os }}-yarn-
     - run: |
-        echo "//registry.npmjs.org/:_authToken=${{ inputs.npmToken }}" >> ~/.npmrc
-        yarn install --frozen-lockfile
+        yarn config set npmAuthToken ${{ inputs.npmToken }} --home
+        yarn install --immutable
       shell: bash
