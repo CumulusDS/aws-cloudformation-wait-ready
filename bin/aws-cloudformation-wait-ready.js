@@ -1,17 +1,15 @@
 #!/usr/bin/env node
-
-const parseArgs = require("minimist");
-const { CloudFormation } = require("aws-sdk");
-const process = require("process");
-const cfnWaitReady = require("../lib").default;
+import parseArgs from "minimist";
+import { CloudFormation } from "aws-sdk";
+import cfnWaitReady from "../lib";
 
 const args = parseArgs(process.argv.slice(2), {
   alias: {
     region: ["r"],
     "stack-name": ["s"],
-    help: ["h"]
+    help: ["h"],
   },
-  boolean: ["help"]
+  boolean: ["help"],
 });
 
 function printHelp() {
@@ -20,7 +18,7 @@ function printHelp() {
       "Options:\n" +
       "\t-r REGION, --region STRING    - Specify the AWS region to address\n" +
       "\t-s STACK, --stack-name STRING - Name of the stack to wait on\n" +
-      "\t-h, --help                    - Print this message.\n"
+      "\t-h, --help                    - Print this message.\n",
   );
 }
 
