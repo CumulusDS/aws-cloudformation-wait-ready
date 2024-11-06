@@ -1,0 +1,25 @@
+name: Prerelease
+on:
+  push:
+    tags-ignore:
+      - "**"
+    branches-ignore:
+      - "dependabot/**"
+    paths:
+      - .github/workflows/prerelease.yml
+      - .babelrc.js
+      - .eslintrc.js
+      - .flowconfig
+      - .yarnrc.yml
+      - package.json
+      - prettier.config.js
+      - yarn.lock
+      - src/**/*
+      - test/**/*
+      - README.md
+      - .yarn/versions/*
+jobs:
+  prerelease:
+    name: Publish Prerelease
+    uses: CumulusDS/workflows-public/.github/workflows/package-prerelease.yml@master
+    secrets: inherit

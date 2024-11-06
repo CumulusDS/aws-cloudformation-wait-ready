@@ -1,0 +1,33 @@
+actions:
+  - any: ['.github/workflows/*.yml']
+
+automerge:
+  - any: ['configs/dev/**/*.json']
+    all: ['!configs/dev/us-east-1/tags.json', '!configs/dev/us-east-2/tags.json', '!configs/prod/**/*', '!configs/site-template.json', '!changelog/**/*', '!scripts/**/*', '!templates/**/*', '!./*', '!.*', '!.github/**/*']
+
+cloudformation:
+  - any: ['templates/*.yml', 'templates/policies/*.json']
+
+config:
+  - any: ['configs/**/*.json']
+
+dev:
+  - any: ['configs/dev/**/*.json']
+
+deployment:
+  - any: ['serverless.yml']
+
+documentation:
+  - any: ['doc/**/*', 'README.md']
+
+javascript:
+  - any: ['src/**/*', 'build/**/*', 'test/**/*', 'yarn.lock']
+
+dependencies:
+  - any: ['yarn.lock']
+
+policies:
+  - any: ['templates/policies/*.json']
+
+prod:
+  - any: ['configs/prod/**/*.json']
