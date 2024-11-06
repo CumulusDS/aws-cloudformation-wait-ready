@@ -22,6 +22,7 @@
     "build:flowtypes": "find lib -type f -name '*.d.ts' -exec sh -c 'yarn flowgen --add-flow-header $1 -o ${1%.*.*}.js.flow' _ '{}' \\;",
     "build:license-checker": "license-checker --csv --out var/licenses.csv",
     "clean": "shx rm -rf lib",
+    "flow": "echo this is not a flow project",
     "git:push": "git push --follow-tags",
     "prepack": "yarn run build && yarn run build:flowtypes",
     "publish:patch": "run-s version:patch git:push",
