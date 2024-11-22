@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 import parseArgs from "minimist";
 import { CloudFormation } from "aws-sdk";
-import cfnWaitReady from "../lib";
+// eslint-disable-next-line import/extensions
+import cfnWaitReady from "../lib/index.js";
 
 const args = parseArgs(process.argv.slice(2), {
   alias: {
