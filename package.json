@@ -25,6 +25,7 @@
     "flow": "echo this is not a flow project",
     "git:push": "git push --follow-tags",
     "prepack": "yarn run build && yarn run build:flowtypes",
+    "prerelease": "yarn version apply && yarn run version:feature $0",
     "publish:patch": "run-s version:patch git:push",
     "publish:minor": "run-s version:minor git:push",
     "publish:major": "run-s version:major git:push",
