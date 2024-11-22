@@ -1,0 +1,12 @@
+name: Import Labels
+on:
+  label:
+    types:
+      - created
+      - edited
+      - deleted
+jobs:
+  import:
+    name: Import Labels
+    uses: CumulusDS/workflows-public/.github/workflows/labels-import.yml@master
+    secrets: inherit

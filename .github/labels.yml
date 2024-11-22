@@ -1,0 +1,96 @@
+labels:
+- name: actions
+  description: "github actions change"
+  color: "d4c5f9"
+- name: autoapprove
+  description: auto approve changes for merge
+  color: "fbca04"
+- name: automation
+  description: "automatic change"
+  color: "A763B0"
+- name: automerge
+  description: automergable
+  color: "fbca04"
+- name: blocker
+  description: An issue that blocks prod release
+  color: "b60205"
+- name: breaking
+  description: Breaking Changes
+  color: bfd4f2
+- name: bug
+  description: Something isn't working
+  color: "d73a4a"
+- name: config
+  description: configuration change
+  color: "0e8a16"
+- name: dependabot
+  description: Pull requests opened by dependabot
+  color: 006b75
+- name: dependencies
+  description: Pull requests that update a dependency file
+  color: "0366d6"
+- name: deployment
+  description: Changes at the deployment procedure, serverless.yml
+  color: "347003"
+- name: dev
+  description: Development environment(s) changed/updated
+  color: "a9f9cf"
+- name: documentation
+  description: Improvements or additions to documentation
+  color: "0075ca"
+- name: duplicate
+  description: This issue or pull request already exists
+  color: "cfd3d7"
+- name: enhancement
+  description: New feature or request
+  color: "a2eeef"
+- name: good first issue
+  description: Good for newcomers
+  color: "7057ff"
+- name: help wanted
+  description: Extra attention is needed
+  color: "008672"
+- name: invalid
+  description: This doesn't seem right
+  color: "e4e669"
+- name: javascript
+  description: Pull requests that update Javascript code
+  color: "168700"
+- name: prod
+  description: Production Environment(s) changed/updated
+  color: "c61d91"
+- name: question
+  description: Further information is requested
+  color: "d876e3"
+- name: wip
+  description: Work in progress
+  color: "bec4f7"
+- name: wontfix
+  description: This will not be worked on
+  color: "ffffff"
+repos:
+- name: CumulusDS/aws-apig-bypass
+  labels:
+  - actions
+  - autoapprove
+  - automation
+  - automerge
+  - blocker
+  - breaking
+  - bug
+  - config
+  - dependabot
+  - dependencies
+  - deployment
+  - dev
+  - documentation
+  - duplicate
+  - enhancement
+  - good first issue
+  - help wanted
+  - invalid
+  - javascript
+  - prod
+  - question
+  - wip
+  - wontfix

@@ -1,0 +1,13 @@
+name: Dependabot AutoMerger
+on:
+  pull_request_target:
+    branches-ignore:
+      - 'dependabot/npm_and_yarn/cumulusds/*-v[0-9]+.[0-9]+.[0-9]+-*.[0-9].g*'
+    paths:
+      - "package.json"
+      - "yarn.lock"
+jobs:
+  dependabot-automerge:
+    name: Dependabot AutoMerger
+    uses: CumulusDS/workflows-public/.github/workflows/dependabot-automerger.yml@master
+    secrets: inherit

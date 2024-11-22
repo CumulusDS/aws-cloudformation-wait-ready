@@ -1,0 +1,11 @@
+name: Create Release
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - 'v[0-9]+.[0-9]+.[0-9]+.[0-9]+'
+jobs:
+  release:
+    name: Create Release
+    uses: CumulusDS/workflows-public/.github/workflows/create-release.yml@master
+    secrets: inherit

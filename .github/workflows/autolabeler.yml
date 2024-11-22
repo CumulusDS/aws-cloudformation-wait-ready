@@ -1,0 +1,7 @@
+name: PR AutoLabeler
+on: [pull_request_target]
+jobs:
+  label:
+    name: Auto Labeler
+    uses: CumulusDS/workflows-public/.github/workflows/autolabeler.yml@master
+    secrets: inherit
