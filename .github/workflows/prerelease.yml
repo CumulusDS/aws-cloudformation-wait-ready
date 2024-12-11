@@ -25,3 +25,4 @@ jobs:
     secrets: inherit
     with:
       nodeVersion: 20
+      npmjsPublishToken: "NPM_PUBLISH_TOKEN_AWS_CLOUDFORMATION_WAIT_READY"
