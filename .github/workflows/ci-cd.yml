@@ -27,7 +27,7 @@ jobs:
       - run: yarn build:license-checker
       - run: yarn flow start
       - run: yarn test
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: upload-artifacts
           path: var
