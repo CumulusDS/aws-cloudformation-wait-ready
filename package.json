@@ -1,6 +1,6 @@
 {
   "name": "@cumulusds/aws-cloudformation-wait-ready",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "Wait for a CloudFormation stack to be ready for the next deploy",
   "repository": "https://github.com/CumulusDS/aws-cloudformation-wait-ready",
   "author": "Cumulus Digital Systems",
