@@ -10,3 +10,4 @@ jobs:
     secrets: inherit
     with:
       access: public
+      npmjsPublishToken: "NPM_PUBLISH_TOKEN_AWS_CLOUDFORMATION_WAIT_READY"
