@@ -1,0 +1,11 @@
+name: Assigner
+on:
+  issues:
+    types: [opened, reopened]
+  pull_request_target:
+    types: [opened, reopened]
+jobs:
+  assignAuthor:
+    name: Assign author
+    uses: CumulusDS/workflows-public/.github/workflows/assign.yml@master
+    secrets: inherit

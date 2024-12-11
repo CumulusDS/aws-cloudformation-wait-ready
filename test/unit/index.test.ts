@@ -1,5 +1,3 @@
-// @flow
-
 import cfnWaitReady from "../../src";
 
 const completeEvent = {
@@ -7,42 +5,42 @@ const completeEvent = {
   LogicalResourceId: "stack-name",
   ResourceStatus: "UPDATE_COMPLETE",
   Timestamp: new Date(),
-  ResourceStatusReason: "Event 2: Complete"
+  ResourceStatusReason: "Event 2: Complete",
 };
 
 describe("Stack is ready", () => {
   const describeStacks = jest.fn().mockReturnValue({
     promise: jest.fn().mockResolvedValue({
-      Stacks: [{ StackStatus: "UPDATE_COMPLETE" }]
-    })
+      Stacks: [{ StackStatus: "UPDATE_COMPLETE" }],
+    }),
   });
 
   const describeStackEvents = jest.fn().mockReturnValueOnce({
     promise: jest.fn().mockResolvedValue({
-      StackEvents: [completeEvent]
-    })
+      StackEvents: [completeEvent],
+    }),
   });
 
   it("returns without describing events", async () => {
     const cloudFormation = { describeStacks, describeStackEvents };
     const params = { StackName: "stack-name" };
     await cfnWaitReady(cloudFormation, params);
-    expect(describeStackEvents).not.toBeCalled();
+    expect(describeStackEvents).not.toHaveBeenCalled();
   });
 });
 
 describe("Stack is updating", () => {
   const describeStacks = jest.fn().mockReturnValue({
     promise: jest.fn().mockResolvedValue({
-      Stacks: [{ StackStatus: "UPDATE_IN_PROGRESS" }]
-    })
+      Stacks: [{ StackStatus: "UPDATE_IN_PROGRESS" }],
+    }),
   });
 
   describe("completing in first polling cycle", () => {
     const describeStackEvents = jest.fn().mockReturnValueOnce({
       promise: jest.fn().mockResolvedValue({
-        StackEvents: [completeEvent]
-      })
+        StackEvents: [completeEvent],
+      }),
     });
 
     it("returns", () => {
@@ -58,21 +56,21 @@ describe("Stack is updating", () => {
       LogicalResourceId: "other-resource",
       ResourceStatus: "OK",
       Timestamp: new Date(),
-      ResourceStatusReason: null
+      ResourceStatusReason: null,
     };
     const stackEvents1 = {
-      StackEvents: [incompleteEvent]
+      StackEvents: [incompleteEvent],
     };
     const stackEvents2 = {
-      StackEvents: [completeEvent, incompleteEvent]
+      StackEvents: [completeEvent, incompleteEvent],
     };
     const describeStackEvents = jest
       .fn()
       .mockReturnValueOnce({
-        promise: jest.fn().mockResolvedValue(stackEvents1)
+        promise: jest.fn().mockResolvedValue(stackEvents1),
       })
       .mockReturnValueOnce({
-        promise: jest.fn().mockResolvedValue(stackEvents2)
+        promise: jest.fn().mockResolvedValue(stackEvents2),
       });
 
     const flushPromises = () => new Promise(setImmediate);
@@ -86,7 +84,7 @@ describe("Stack is updating", () => {
       await flushPromises();
       await flushPromises();
       jest.runAllTimers();
-      expect(setTimeout).toBeCalledTimes(1);
+      expect(setTimeout).toHaveBeenCalledTimes(1);
       await result;
     });
   });
@@ -94,8 +92,7 @@ describe("Stack is updating", () => {
 
 describe("Stack is missing", () => {
   it("returns without describing events", async () => {
-    const error = new Error("Stack with id MyStackName does not exist");
-    // $FlowFixMe
+    const error: Error & { code: unknown } = { ...new Error("Stack with id MyStackName does not exist"), code: null };
     error.code = "ValidationError";
     const describeStacks = jest.fn().mockReturnValue({ promise: jest.fn().mockRejectedValue(error) });
     const describeStackEvents = jest.fn().mockReturnValueOnce({ promise: jest.fn().mockRejectedValue(error) });
@@ -103,13 +100,12 @@ describe("Stack is missing", () => {
     const cloudFormation = { describeStacks, describeStackEvents };
     const params = { StackName: "stack-name" };
     await cfnWaitReady(cloudFormation, params);
-    expect(describeStackEvents).not.toBeCalled();
+    expect(describeStackEvents).not.toHaveBeenCalled();
   });
 });
 
 describe("API has unexpected error", () => {
-  const error = new Error("Internal server error");
-  // $FlowFixMe
+  const error: Error & { code: unknown } = { ...new Error("Internal server error"), code: null };
   error.code = "InternalServerError";
 
   const describeStacks = jest.fn().mockReturnValue({ promise: jest.fn().mockRejectedValue(error) });

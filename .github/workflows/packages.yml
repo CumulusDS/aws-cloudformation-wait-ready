@@ -6,12 +6,7 @@ permissions:
   contents: read
   pull-requests: write
 jobs:
-  yarn:
-    name: Yarn Lock Changes
-    runs-on: ubuntu-22.04
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@v3
-      - uses: Simek/yarn-lock-changes@v0.11.1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+  package-checker:
+    name: Package Checker
+    uses: CumulusDS/workflows-public/.github/workflows/packages.yml@master
+    secrets: inherit

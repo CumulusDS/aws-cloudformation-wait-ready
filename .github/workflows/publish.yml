@@ -3,22 +3,10 @@ on:
   release:
     types: [released]
 jobs:
-  publish:
-    name: Publish
-    runs-on: ubuntu-22.04
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup
-        with:
-          node: ${{ matrix.node }}
-          npmToken: ${{ secrets.NODE_AUTH_TOKEN }}
-      - name: Build
-        run: yarn build
-      - run: |
-          echo "//registry.npmjs.org/:_authToken=$TOKEN" > ~/.npmrc
-        env:
-          TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN_AWS_CLOUDFORMATION_WAIT_READY }}
-      - name: Publish
-        run: npm publish
-
+  unit:
+    name: Unit
+    if: github.event_name == 'release'
+    uses: CumulusDS/workflows-public/.github/workflows/package-publish.yml@master
+    secrets: inherit
+    with:
+      access: public

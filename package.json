@@ -6,34 +6,32 @@
   "author": "Cumulus Digital Systems",
   "license": "MIT",
   "engines": {
-    "node": "^14.15.0 || ^16.0.0 || ^18.0.0 || ^19.0.0"
+    "node": "^16.0.0 || ^18.0.0 || ^20.0.0 || >=21.0.0"
   },
   "main": "lib/index.js",
-  "bin": {
-    "aws-cloudformation-wait-ready": "bin/aws-cloudformation-wait-ready.js"
-  },
+  "bin": "bin/aws-cloudformation-wait-ready.js",
   "src": [
     "bin, lib",
     "package.json"
   ],
   "scripts": {
     "aws-cloudformation-wait-ready": "node bin/aws-cloudformation-wait-ready.js",
-    "build": "run-p build:babel build:flow-copy-source build:license-checker",
-    "build:babel": "babel src --out-dir lib --ignore test.js",
-    "build:flow-copy-source": "flow-copy-source --ignore test.js src lib",
+    "build": "yarn run build:license-checker && tsc",
+    "build:flowtypes": "find lib -type f -name '*.d.ts' -exec sh -c 'yarn flowgen --add-flow-header $1 -o ${1%.*.*}.js.flow' _ '{}' \\;",
     "build:license-checker": "license-checker --csv --out var/licenses.csv",
     "clean": "shx rm -rf lib",
+    "flow": "echo this is not a flow project",
     "git:push": "git push --follow-tags",
+    "prepack": "yarn run build && yarn run build:flowtypes",
+    "prerelease": "yarn version apply && yarn run version:feature $0",
     "publish:patch": "run-s version:patch git:push",
     "publish:minor": "run-s version:minor git:push",
     "publish:major": "run-s version:major git:push",
-    "sites": "node bin/sites.js",
-    "test": "run-p --aggregate-output test:**",
-    "test:flow:coverage-report": "flow-coverage-report -i 'src/**/*.js' -x 'test/**/*.js' -t html -t text --threshold 98 --output-dir var/coverage/flow",
-    "test:flow:status": "flow status",
+    "test": "yarn run test:jest && yarn run test:lint && yarn run test:prettier",
     "test:jest": "jest --color",
-    "test:lint": "eslint *.js src test",
-    "test:prettier": "prettier --list-different \"{src,test}/**/*.{js,jsx,yml}\" \"*.{js,yml}\"",
+    "test:lint": "yarn run build && eslint . src test",
+    "test:prettier": "prettier --list-different \"{src,test}/**/*.{js,jsx,yml,ts}\" \"*.{js,yml}\"",
+    "version:feature": "yarn version ${npm_package_version}-$0.$(git describe | rev | cut -d '-' -f 2 | rev).g$(git rev-parse --short HEAD)",
     "version:patch": "yarn version --new-version patch",
     "version:minor": "yarn version --new-version minor",
     "version:major": "yarn version --new-version major"
@@ -42,16 +40,16 @@
     "verbose": true,
     "collectCoverage": true,
     "collectCoverageFrom": [
-      "src/**/*.js"
+      "src/**/*.ts"
     ],
     "testEnvironment": "node",
     "coverageDirectory": "var/coverage/test",
     "coverageThreshold": {
       "global": {
+        "statements": 100,
         "branches": 100,
         "functions": 100,
-        "lines": 100,
-        "statements": 100
+        "lines": 100
       }
     }
   },
@@ -65,28 +63,29 @@
     "@babel/core": "^7.7.4",
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.7.4",
     "@babel/preset-env": "^7.0.0",
-    "@babel/preset-flow": "^7.0.0",
-    "@cumulusds/flow-coverage-report": "^0.8.1",
-    "babel-eslint": "10.0.3",
-    "babel-jest": "^24.9.0",
-    "eslint": "^6.7.1",
+    "@babel/preset-typescript": "^7.26.0",
+    "@types/jest": "^29.5.14",
+    "@typescript-eslint/eslint-plugin": "^8.13.0",
+    "@typescript-eslint/parser": "^8.13.0",
+    "babel-eslint": "^10.1.0",
+    "babel-jest": "^29.7.0",
+    "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "14.0.0",
-    "eslint-config-prettier": "^2.9.0",
-    "eslint-plugin-flowtype": "^2.49.3",
-    "eslint-plugin-import": "2.18.2",
-    "eslint-plugin-jest": "^21.15.1",
-    "eslint-plugin-prettier": "^2.6.0",
-    "flow-bin": "^0.112.0",
-    "flow-copy-source": "^2.0.9",
-    "flow-typed": "^3.2.1",
+    "eslint-config-prettier": "^8.10.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jest": "^28.8.3",
+    "eslint-plugin-prettier": "^5.2.1",
+    "flowgen": "^1.21.0",
     "git-describe": "^4.0.4",
     "jest": "^26.0.0",
     "license-checker": "^25.0.1",
     "npm-run-all": "^4.1.3",
-    "prettier": "^1.14.0",
-    "shx": "^0.3.2"
+    "prettier": "^3.3.3",
+    "shx": "^0.3.2",
+    "typescript": "^5.6.3"
   },
   "resolutions": {
     "set-value": "^4.0.1"
-  }
+  },
+  "packageManager": "yarn@3.5.0"
 }
