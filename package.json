@@ -33,6 +33,7 @@
     "test:jest": "jest --color",
     "test:lint": "yarn run build && eslint . src test",
     "test:prettier": "prettier --list-different \"{src,test}/**/*.{js,jsx,yml,ts}\" \"*.{js,yml}\"",
+    "version:feature": "yarn version ${npm_package_version}-$0.$(git describe | rev | cut -d '-' -f 2 | rev).g$(git rev-parse --short HEAD)",
     "version:patch": "yarn version --new-version patch",
     "version:minor": "yarn version --new-version minor",
     "version:major": "yarn version --new-version major"
