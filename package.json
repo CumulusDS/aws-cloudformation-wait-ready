@@ -27,7 +27,7 @@
     "publish:patch": "run-s version:patch git:push",
     "publish:minor": "run-s version:minor git:push",
     "publish:major": "run-s version:major git:push",
-    "test": "run-p --aggregate-output test:**",
+    "test": "yarn run test:jest && yarn run test:lint && yarn run test:prettier",
     "test:jest": "jest --color",
     "test:lint": "yarn run build && eslint . src test",
     "test:prettier": "prettier --list-different \"{src,test}/**/*.{js,jsx,yml,ts}\" \"*.{js,yml}\"",
