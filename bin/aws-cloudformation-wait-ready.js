@@ -1,8 +1,11 @@
 #!/usr/bin/env node
-import parseArgs from "minimist";
-import { CloudFormation } from "aws-sdk";
-// eslint-disable-next-line import/extensions
-import cfnWaitReady from "../lib/index.js";
+
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const parseArgs = require("minimist");
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { CloudFormation } = require("aws-sdk");
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const cfnWaitReady = require("../lib").default;
 
 const args = parseArgs(process.argv.slice(2), {
   alias: {
