@@ -63,6 +63,7 @@
   "dependencies": {
     "aws-sdk": "^2.536.0",
     "chalk": "^3.0.0",
+    "cross-spawn": "^7.0.5",
     "minimist": "^1.2.8"
   },
   "devDependencies": {
@@ -94,5 +95,6 @@
   "resolutions": {
     "set-value": "^4.0.1"
   },
-  "packageManager": "yarn@3.5.0"
+  "packageManager": "yarn@3.5.0",
+  "cross-spawn": "7.0.5"
 }
