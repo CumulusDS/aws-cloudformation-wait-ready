@@ -1,7 +1,5 @@
 name: Assigner
 on:
-  issues:
-    types: [opened, reopened]
   pull_request_target:
     types: [opened, reopened]
 jobs:
