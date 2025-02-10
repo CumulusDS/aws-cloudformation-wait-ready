@@ -1398,7 +1398,7 @@ __metadata:
     eslint-config-airbnb-base: ^15.0.0
     eslint-config-prettier: ^8.10.0
     eslint-plugin-import: ^2.18.2
-    eslint-plugin-jest: 28.10.1
+    eslint-plugin-jest: 28.9.0
     eslint-plugin-prettier: ^5.2.1
     flowgen: ^1.21.0
     git-describe: ^4.0.4
@@ -3808,9 +3808,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-jest@npm:28.10.1":
-  version: 28.10.1
-  resolution: "eslint-plugin-jest@npm:28.10.1"
+"eslint-plugin-jest@npm:28.9.0":
+  version: 28.9.0
+  resolution: "eslint-plugin-jest@npm:28.9.0"
   dependencies:
     "@typescript-eslint/utils": ^6.0.0 || ^7.0.0 || ^8.0.0
   peerDependencies:
@@ -3822,7 +3822,7 @@ __metadata:
       optional: true
     jest:
       optional: true
-  checksum: 3360bfc8c12ddb328a5e4ba8091500bf19bfe66a0ff4156bee3791a2600771bb13a0763a1a367e3ec043addd1e2c820b84bae2abbc970d89fcdc705b2a4d62c5
+  checksum: 90863fab5f3f2f033d98042b13769dc82504c489506872ae9926a1d2b6bcc25c5dc41105e28643f5eb81943aff1aa1cd4d44ada5c1add0a43f1c7a619adbc3d2
   languageName: node
   linkType: hard
 
