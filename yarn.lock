@@ -1387,7 +1387,7 @@ __metadata:
     "@babel/preset-env": ^7.0.0
     "@babel/preset-typescript": ^7.26.0
     "@types/jest": ^29.5.14
-    "@typescript-eslint/eslint-plugin": ^8.13.0
+    "@typescript-eslint/eslint-plugin": ^8.24.0
     "@typescript-eslint/parser": ^8.13.0
     aws-sdk: ^2.536.0
     babel-eslint: ^10.1.0
@@ -1398,7 +1398,7 @@ __metadata:
     eslint-config-airbnb-base: ^15.0.0
     eslint-config-prettier: ^8.10.0
     eslint-plugin-import: ^2.18.2
-    eslint-plugin-jest: ^28.8.3
+    eslint-plugin-jest: 28.10.1
     eslint-plugin-prettier: ^5.2.1
     flowgen: ^1.21.0
     git-describe: ^4.0.4
@@ -2086,7 +2086,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:^8.13.0":
+"@typescript-eslint/eslint-plugin@npm:^8.24.0":
   version: 8.24.0
   resolution: "@typescript-eslint/eslint-plugin@npm:8.24.0"
   dependencies:
@@ -3808,9 +3808,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-jest@npm:^28.8.3":
-  version: 28.11.0
-  resolution: "eslint-plugin-jest@npm:28.11.0"
+"eslint-plugin-jest@npm:28.10.1":
+  version: 28.10.1
+  resolution: "eslint-plugin-jest@npm:28.10.1"
   dependencies:
     "@typescript-eslint/utils": ^6.0.0 || ^7.0.0 || ^8.0.0
   peerDependencies:
@@ -3822,7 +3822,7 @@ __metadata:
       optional: true
     jest:
       optional: true
-  checksum: 809ec7f0d49dce288c21de484ca5ec2003f7ef355435dcdba591e96ccdcc6b30bf11f55b21f93cd260a56a82138a2c7835a0404ff20d34552f30729751c51dfa
+  checksum: 3360bfc8c12ddb328a5e4ba8091500bf19bfe66a0ff4156bee3791a2600771bb13a0763a1a367e3ec043addd1e2c820b84bae2abbc970d89fcdc705b2a4d62c5
   languageName: node
   linkType: hard
 
