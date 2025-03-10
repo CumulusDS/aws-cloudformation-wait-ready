@@ -5,5 +5,5 @@ on:
 jobs:
   assignAuthor:
     name: Assign author
-    uses: CumulusDS/workflows-public/.github/workflows/assign.yml@master
+    uses: CumulusDS/workflows/.github/workflows/assign.yml@master
     secrets: inherit
