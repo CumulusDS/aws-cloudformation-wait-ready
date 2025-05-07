@@ -76,7 +76,7 @@ describe("Stack is updating", () => {
     const flushPromises = () => new Promise(setImmediate);
 
     it("sleeps once", async () => {
-      jest.useFakeTimers();
+      jest.useFakeTimers({ advanceTimers: true });
       jest.spyOn(global, "setTimeout");
       const cloudFormation = { describeStacks, describeStackEvents };
       const params = { StackName: "stack-name" };
