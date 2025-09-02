@@ -1,3 +1,4 @@
+import { CloudFormation } from "@aws-sdk/client-cloudformation";
 import cfnWaitReady from "../../src";
 
 const completeEvent = {
@@ -9,20 +10,16 @@ const completeEvent = {
 };
 
 describe("Stack is ready", () => {
-  const describeStacks = jest.fn().mockReturnValue({
-    promise: jest.fn().mockResolvedValue({
-      Stacks: [{ StackStatus: "UPDATE_COMPLETE" }],
-    }),
+  const describeStacks = jest.fn().mockResolvedValue({
+    Stacks: [{ StackStatus: "UPDATE_COMPLETE" }],
   });
 
-  const describeStackEvents = jest.fn().mockReturnValueOnce({
-    promise: jest.fn().mockResolvedValue({
-      StackEvents: [completeEvent],
-    }),
+  const describeStackEvents = jest.fn().mockResolvedValue({
+    StackEvents: [completeEvent],
   });
 
   it("returns without describing events", async () => {
-    const cloudFormation = { describeStacks, describeStackEvents };
+    const cloudFormation = { describeStacks, describeStackEvents } as unknown as CloudFormation;
     const params = { StackName: "stack-name" };
     await cfnWaitReady(cloudFormation, params);
     expect(describeStackEvents).not.toHaveBeenCalled();
@@ -30,21 +27,17 @@ describe("Stack is ready", () => {
 });
 
 describe("Stack is updating", () => {
-  const describeStacks = jest.fn().mockReturnValue({
-    promise: jest.fn().mockResolvedValue({
-      Stacks: [{ StackStatus: "UPDATE_IN_PROGRESS" }],
-    }),
+  const describeStacks = jest.fn().mockResolvedValue({
+    Stacks: [{ StackStatus: "UPDATE_IN_PROGRESS" }],
   });
 
   describe("completing in first polling cycle", () => {
-    const describeStackEvents = jest.fn().mockReturnValueOnce({
-      promise: jest.fn().mockResolvedValue({
-        StackEvents: [completeEvent],
-      }),
+    const describeStackEvents = jest.fn().mockResolvedValue({
+      StackEvents: [completeEvent],
     });
 
     it("returns", () => {
-      const cloudFormation = { describeStacks, describeStackEvents };
+      const cloudFormation = { describeStacks, describeStackEvents } as unknown as CloudFormation;
       const params = { StackName: "stack-name" };
       return expect(cfnWaitReady(cloudFormation, params)).resolves.toBeUndefined();
     });
@@ -64,21 +57,14 @@ describe("Stack is updating", () => {
     const stackEvents2 = {
       StackEvents: [completeEvent, incompleteEvent],
     };
-    const describeStackEvents = jest
-      .fn()
-      .mockReturnValueOnce({
-        promise: jest.fn().mockResolvedValue(stackEvents1),
-      })
-      .mockReturnValueOnce({
-        promise: jest.fn().mockResolvedValue(stackEvents2),
-      });
+    const describeStackEvents = jest.fn().mockResolvedValueOnce(stackEvents1).mockResolvedValueOnce(stackEvents2);
 
     const flushPromises = () => new Promise(setImmediate);
 
     it("sleeps once", async () => {
       jest.useFakeTimers({ advanceTimers: true });
       jest.spyOn(global, "setTimeout");
-      const cloudFormation = { describeStacks, describeStackEvents };
+      const cloudFormation = { describeStacks, describeStackEvents } as unknown as CloudFormation;
       const params = { StackName: "stack-name" };
       const result = cfnWaitReady(cloudFormation, params);
       await flushPromises();
@@ -94,10 +80,10 @@ describe("Stack is missing", () => {
   it("returns without describing events", async () => {
     const error: Error & { code: unknown } = { ...new Error("Stack with id MyStackName does not exist"), code: null };
     error.code = "ValidationError";
-    const describeStacks = jest.fn().mockReturnValue({ promise: jest.fn().mockRejectedValue(error) });
-    const describeStackEvents = jest.fn().mockReturnValueOnce({ promise: jest.fn().mockRejectedValue(error) });
+    const describeStacks = jest.fn().mockRejectedValue(error);
+    const describeStackEvents = jest.fn().mockResolvedValueOnce(error);
 
-    const cloudFormation = { describeStacks, describeStackEvents };
+    const cloudFormation = { describeStacks, describeStackEvents } as unknown as CloudFormation;
     const params = { StackName: "stack-name" };
     await cfnWaitReady(cloudFormation, params);
     expect(describeStackEvents).not.toHaveBeenCalled();
@@ -108,12 +94,12 @@ describe("API has unexpected error", () => {
   const error: Error & { code: unknown } = { ...new Error("Internal server error"), code: null };
   error.code = "InternalServerError";
 
-  const describeStacks = jest.fn().mockReturnValue({ promise: jest.fn().mockRejectedValue(error) });
+  const describeStacks = jest.fn().mockRejectedValue(error);
 
-  const describeStackEvents = jest.fn().mockReturnValueOnce({ promise: jest.fn().mockRejectedValue(error) });
+  const describeStackEvents = jest.fn().mockRejectedValueOnce(error);
 
   it("rejects", () => {
-    const cloudFormation = { describeStacks, describeStackEvents };
+    const cloudFormation = { describeStacks, describeStackEvents } as unknown as CloudFormation;
     const params = { StackName: "stack-name" };
     return expect(cfnWaitReady(cloudFormation, params)).rejects.toBe(error);
   });

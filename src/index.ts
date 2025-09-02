@@ -1,27 +1,14 @@
 import chalk from "chalk";
+import { CloudFormation, ResourceStatus, StackEvent, StackStatus } from "@aws-sdk/client-cloudformation";
 
-export type StackEvent = {
-  EventId: string;
-  LogicalResourceId: string;
-  ResourceStatus: string;
-  Timestamp: Date;
-  ResourceStatusReason: string | undefined | null;
-};
-export type StackEventsType = { StackEvents: StackEvent[] };
-export type DescribeStackEventsResult = { promise: () => Promise<StackEventsType> };
-export type Stack = { StackStatus: string };
-export type DescribeStacksType = { Stacks: Stack[] };
-export type DescribeStacksResult = { promise: () => Promise<DescribeStacksType> };
-export type CloudFormation = {
-  describeStacks: (args: { StackName: string }) => DescribeStacksResult;
-  describeStackEvents: (args: { StackName: string }) => DescribeStackEventsResult;
-};
-
-function isDone(ResourceStatus: string) {
+function isDone(resourceStatus: ResourceStatus | StackStatus | null): boolean {
+  if (!resourceStatus) {
+    return false;
+  }
   return (
-    ResourceStatus.endsWith("_FAILED") ||
-    ResourceStatus.endsWith("_ROLLBACK_COMPLETE") ||
-    ResourceStatus.endsWith("_COMPLETE")
+    resourceStatus.endsWith("_FAILED") ||
+    resourceStatus.endsWith("_ROLLBACK_COMPLETE") ||
+    resourceStatus.endsWith("_COMPLETE")
   );
 }
 
@@ -41,30 +28,36 @@ function sleep(ms: number) {
 async function doWait(cloudFormation: CloudFormation, params: { StackName: string }): Promise<void> {
   const { StackName } = params;
 
-  const isStackEvent = ({ LogicalResourceId }: { LogicalResourceId: string }) => LogicalResourceId === StackName;
+  const isStackEvent = ({ LogicalResourceId }: StackEvent) => LogicalResourceId === StackName;
 
   // Poll events, yielding events from oldest to newest
-  const describeStackEventsSince = async (LatestEventId: string) => {
-    const { StackEvents } = await cloudFormation.describeStackEvents({ StackName }).promise();
+  const describeStackEventsSince = async (LatestEventId: string | null): Promise<StackEvent[]> => {
+    const { StackEvents } = await cloudFormation.describeStackEvents({ StackName });
 
-    const index = StackEvents.findIndex(({ EventId }) => LatestEventId === EventId);
+    const index = StackEvents?.findIndex(({ EventId }) => LatestEventId === EventId);
 
-    const events = index === -1 ? StackEvents : StackEvents.slice(0, index);
+    const events = index === -1 ? StackEvents : StackEvents?.slice(0, index);
 
-    return events.reverse();
+    return events?.reverse() ?? [];
   };
 
   try {
-    const {
-      Stacks: [{ StackStatus }],
-    } = await cloudFormation.describeStacks({ StackName }).promise();
-    if (isDone(StackStatus)) {
+    const response = await cloudFormation.describeStacks({ StackName });
+    const stacks = response.Stacks;
+    if (stacks == null || stacks.length === 0) {
+      console.log(chalk`{green Does Not Exist}`);
+      return;
+    }
+    const { StackStatus: stackStatus } = stacks[0];
+
+    // Check the current status
+    if (isDone(stackStatus ?? null)) {
       console.log(chalk`{green Ready}`);
       return;
     }
 
-    let LatestEventId = "";
-    let LatestStatus = "";
+    let LatestEventId: string | null = null;
+    let LatestStatus: ResourceStatus | null = null;
 
     do {
       const events = await describeStackEventsSince(LatestEventId);
@@ -73,14 +66,14 @@ async function doWait(cloudFormation: CloudFormation, params: { StackName: strin
         const { ResourceStatusReason } = event;
 
         if (isStackEvent(event)) {
-          console.log(chalk`{bold {yellow ${event.Timestamp.toISOString()}} ${event.ResourceStatus}}`);
-          LatestStatus = event.ResourceStatus;
+          console.log(chalk`{bold {yellow ${event.Timestamp?.toISOString()}} ${event.ResourceStatus}}`);
+          LatestStatus = event.ResourceStatus ?? null;
         } else {
-          console.log(chalk`{yellow ${event.Timestamp.toISOString()}} ${event.ResourceStatus}`);
+          console.log(chalk`{yellow ${event.Timestamp?.toISOString()}} ${event.ResourceStatus}`);
         }
         if (ResourceStatusReason != null) console.log(chalk`${ResourceStatusReason}\n`);
 
-        LatestEventId = event.EventId;
+        LatestEventId = event.EventId ?? null;
       }
 
       if (!isDone(LatestStatus)) {
