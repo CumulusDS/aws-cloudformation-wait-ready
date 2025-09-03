@@ -3,7 +3,7 @@
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const parseArgs = require("minimist");
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const { CloudFormation } = require("aws-sdk");
+const { CloudFormation } = require("@aws-sdk/client-cloudformation");
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const cfnWaitReady = require("../lib").default;
 
