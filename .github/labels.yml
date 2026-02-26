@@ -1,96 +1,249 @@
 labels:
 - name: actions
-  description: "github actions change"
-  color: "d4c5f9"
+  description: github actions change
+  color: d4c5f9
+- name: analytics
+  description: analytics
+  color: c5def5
+- name: android
+  description: Specific to Android build
+  color: 006b75
+- name: Atlas
+  description: Team Atlas (Platform)
+  color: 09850B
+- name: audit
+  description: Regular Account Audits
+  color: 6fb1d0
 - name: autoapprove
   description: auto approve changes for merge
-  color: "fbca04"
+  color: fbca04
 - name: automation
-  description: "automatic change"
-  color: "A763B0"
+  description: automatic change
+  color: a763b0
 - name: automerge
   description: automergable
-  color: "fbca04"
+  color: fbca04
+- name: before-prod
+  description: Must be done before prod launch
+  color: d47a26
 - name: blocker
-  description: An issue that blocks prod release
-  color: "b60205"
+  description: issues blocking prod deployment
+  color: b60205
 - name: breaking
   description: Breaking Changes
-  color: bfd4f2
+  color: b60205
 - name: bug
   description: Something isn't working
-  color: "d73a4a"
+  color: d73a4a
+- name: build
+  description: Build System and Dependencies
+  color: bfdadc
+- name: Castor
+  description: Team Castor (Growth)
+  color: 3C302C
+- name: chore
+  description: chore task
+  color: bfdadc
+- name: ci
+  description: Continuous Integration
+  color: 4a97d6
+- name: codebase
+  description: Pull requests that update codebase
+  color: "168700"
 - name: config
   description: configuration change
-  color: "0e8a16"
+  color: 0e8a16
+- name: dead letter
+  description: i see dead letters
+  color: 350d07
 - name: dependabot
-  description: Pull requests opened by dependabot
+  description: dependabot changes
   color: 006b75
 - name: dependencies
-  description: Pull requests that update a dependency file
-  color: "0366d6"
+  description: Dependency update(s)
+  color: 0366d6
 - name: deployment
-  description: Changes at the deployment procedure, serverless.yml
+  description: Changes at the deployment procedure, e.g. serverless.yml
   color: "347003"
 - name: dev
   description: Development environment(s) changed/updated
-  color: "a9f9cf"
+  color: a9f9cf
+- name: dev tool
+  description: tool aiding developers/development
+  color: f78611
 - name: documentation
   description: Improvements or additions to documentation
-  color: "0075ca"
+  color: 0075ca
 - name: duplicate
   description: This issue or pull request already exists
-  color: "cfd3d7"
+  color: cfd3d7
 - name: enhancement
   description: New feature or request
-  color: "a2eeef"
+  color: a2eeef
+- name: epic
+  description: epic
+  color: 31405f
+- name: feature request
+  description: This is a new feature request
+  color: 4104af
 - name: good first issue
   description: Good for newcomers
-  color: "7057ff"
+  color: 7057ff
 - name: help wanted
   description: Extra attention is needed
   color: "008672"
+- name: hotfix
+  description: applying hot fix to existing release
+  color: 006B75
+- name: infrastructure
+  description: application infrastructure, cloudformation, serverless, terraform work,
+    etc.
+  color: 0366d6
 - name: invalid
   description: This doesn't seem right
-  color: "e4e669"
+  color: e4e669
+- name: iOS
+  description: Specific to iOS build
+  color: 7937fc
 - name: javascript
   description: Pull requests that update Javascript code
   color: "168700"
+- name: keep alive
+  description: stop from going stale
+  color: 35a458
+- name: management & governance
+  description: ""
+  color: 9e0e6c
+- name: needs triage
+  description: something requiring human attention to decipher a set of tasks to remediate
+  color: 1e040b
+- name: performance
+  description: Performance
+  color: "016175"
+- name: platform
+  description: Advances or implements an architecture/platform agenda
+  color: 1d76db
+- name: Pollux
+  description: Team Pollux (Engagement)
+  color: FF69B4
 - name: prod
   description: Production Environment(s) changed/updated
-  color: "c61d91"
+  color: c61d91
 - name: question
   description: Further information is requested
-  color: "d876e3"
+  color: d876e3
+- name: Ready for SQA
+  description: Ready to be reviewed/tested by SQA
+  color: fbca04
+- name: refactoring
+  description: Refactoring
+  color: ef67c4
+- name: removal
+  description: Removals and Deprecations
+  color: 9ae7ea
+- name: research
+  description: Researching
+  color: aaaaaa
+- name: security
+  description: ""
+  color: fba33e
+- name: SQA Approved
+  description: SQA Tested & Approved
+  color: 0e8a16
+- name: stale 30
+  description: stale - no movement in 30 days
+  color: bf7034
+- name: stale 7
+  description: stale - no movement in 7 days
+  color: bf7034
+- name: stale 90
+  description: stale - no movement in 90 days
+  color: bf7034
+- name: Story
+  description: Story issue with sub-tasks
+  color: 6b4c9f
+- name: style
+  description: Style
+  color: c120e5
+- name: tech debt
+  description: required to bring system up to date
+  color: fef2c0
+- name: test suite
+  description: ""
+  color: b8f96d
+- name: testing
+  description: Testing in progress
+  color: b1fc6f
+- name: typescript
+  description: Pull requests that update Typescript code
+  color: 1d76db
 - name: wip
   description: Work in progress
-  color: "bec4f7"
+  color: bec4f7
 - name: wontfix
   description: This will not be worked on
-  color: "ffffff"
+  color: ffffff
 repos:
 - name: CumulusDS/aws-apig-bypass
   labels:
   - actions
+  - analytics
+  - android
+  - Atlas
+  - audit
   - autoapprove
   - automation
   - automerge
+  - before-prod
   - blocker
   - breaking
   - bug
+  - build
+  - Castor
+  - chore
+  - ci
+  - codebase
   - config
+  - dead letter
   - dependabot
   - dependencies
   - deployment
   - dev
+  - dev tool
   - documentation
   - duplicate
   - enhancement
+  - epic
+  - feature request
   - good first issue
   - help wanted
+  - hotfix
+  - infrastructure
   - invalid
+  - iOS
   - javascript
+  - keep alive
+  - management & governance
+  - needs triage
+  - performance
+  - platform
+  - Pollux
   - prod
   - question
+  - Ready for SQA
+  - refactoring
+  - removal
+  - research
+  - security
+  - SQA Approved
+  - stale 30
+  - stale 7
+  - stale 90
+  - Story
+  - style
+  - tech debt
+  - test suite
+  - testing
+  - typescript
   - wip
   - wontfix
