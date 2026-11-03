@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "ES2022", // Specify ECMAScript target version
+    "declaration": true,
+    "module": "commonjs", // Specify module code generation
+    "strict": true, // Enable all strict type-checking options
+    "esModuleInterop": true, // Emit additional JavaScript to ease importing CommonJS modules
+    "skipLibCheck": true, // Skip type checking of declaration files
+    "forceConsistentCasingInFileNames": true, // Ensure consistent casing in file names
+    "outDir": "lib",
+  },
+  "include": ["src"]
+}

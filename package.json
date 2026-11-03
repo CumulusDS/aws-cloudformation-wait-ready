@@ -17,7 +17,7 @@
   "scripts": {
     "aws-cloudformation-wait-ready": "node bin/aws-cloudformation-wait-ready.js",
     "build": "yarn run build:license-checker && yarn compile",
-    "compile": "tsc && tsc -p tsconfig-tests.json",
+    "compile": "tsc --build tsconfig.build.json",
     "build:license-checker": "license-checker --csv --out var/licenses.csv",
     "clean": "shx rm -rf lib",
     "flow": "echo this is not a flow project",
@@ -36,6 +36,7 @@
     "test:jest": "jest --color",
     "test:lint": "yarn run build && eslint src test",
     "test:prettier": "prettier --list-different \"{src,test}/**/*.{js,jsx,yml,ts}\" \"*.{js,yml}\"",
+    "typecheck": "tsc --noEmit --project tsconfig.json",
     "version:patch": "yarn version --new-version patch",
     "version:minor": "yarn version --new-version minor",
     "version:major": "yarn version --new-version major",
