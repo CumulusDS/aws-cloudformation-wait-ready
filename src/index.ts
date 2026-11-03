@@ -81,7 +81,8 @@ async function doWait(cloudFormation: CloudFormation, params: { StackName: strin
       }
     } while (!isDone(LatestStatus));
   } catch (error: unknown) {
-    if ((error as { code: unknown }).code === "ValidationError") {
+    // AWS SDK v3 exposes the error code as `name` (e.g. CloudFormationServiceException [ValidationError])
+    if ((error as { name?: unknown } | null)?.name === "ValidationError") {
       // Stack with id MyStackName does not exist
       console.log(chalk`{green Does Not Exist}`);
     } else {

@@ -1,4 +1,4 @@
-import { CloudFormation } from "@aws-sdk/client-cloudformation";
+import { CloudFormation, CloudFormationServiceException } from "@aws-sdk/client-cloudformation";
 import cfnWaitReady from "../../src";
 
 const completeEvent = {
@@ -78,8 +78,13 @@ describe("Stack is updating", () => {
 
 describe("Stack is missing", () => {
   it("returns without describing events", async () => {
-    const error: Error & { code: unknown } = { ...new Error("Stack with id MyStackName does not exist"), code: null };
-    error.code = "ValidationError";
+    // Shape of the AWS SDK v3 error: the error code is carried in `name`
+    const error = new CloudFormationServiceException({
+      name: "ValidationError",
+      $fault: "client",
+      $metadata: { httpStatusCode: 400 },
+      message: "Stack with id MyStackName does not exist",
+    });
     const describeStacks = jest.fn().mockRejectedValue(error);
     const describeStackEvents = jest.fn().mockResolvedValueOnce(error);
 
