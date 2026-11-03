@@ -17,7 +17,7 @@
   "scripts": {
     "aws-cloudformation-wait-ready": "node bin/aws-cloudformation-wait-ready.js",
     "build": "yarn run build:license-checker && yarn compile",
-    "compile": "tsc --build tsconfig.build.json",
+    "compile": "tsc --build tsconfig.build.json --verbose",
     "build:license-checker": "license-checker --csv --out var/licenses.csv",
     "clean": "shx rm -rf lib",
     "flow": "echo this is not a flow project",
