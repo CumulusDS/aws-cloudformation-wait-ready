@@ -18,9 +18,8 @@ module.exports = {
     ],
   },
   parser: "@typescript-eslint/parser",
-  plugins: ["jest", "@typescript-eslint"],
+  plugins: ["@vitest", "@typescript-eslint"],
   env: {
-    "jest/globals": true,
     node: true,
   },
   parserOptions: {
@@ -46,6 +45,10 @@ module.exports = {
       parser: "@typescript-eslint/parser",
       plugins: ["@typescript-eslint"],
       extends: ["plugin:@typescript-eslint/recommended"],
+    },
+    {
+      files: ["test/**/*.{spec,test}.{ts,tsx}"],
+      extends: ["plugin:@vitest/legacy-recommended"],
     },
     {
       files: ["vitest.config.mts"],
