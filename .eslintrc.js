@@ -47,5 +47,11 @@ module.exports = {
       plugins: ["@typescript-eslint"],
       extends: ["plugin:@typescript-eslint/recommended"],
     },
+    {
+      files: ["vitest.config.mts"],
+      rules: {
+        "import/no-extraneous-dependencies": "off",
+      },
+    },
   ],
 };

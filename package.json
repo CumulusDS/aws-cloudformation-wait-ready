@@ -38,6 +38,7 @@
     "test:lint": "eslint \"{src,test}/**/*.{cjs,js,jsx,mjs,cts,ts,mts,tsx,yml}\" \"*.{cjs,js,mjs,cts,mts,ts,yml}\"",
     "test:prettier": "prettier --list-different \"{src,test}/**/*.{cjs,js,jsx,mjs,cts,ts,mts,tsx,yml}\" \"*.{cjs,js,mjs,cts,mts,ts,yml}\"",
     "test:style": "yarn run test:lint && yarn run test:prettier",
+    "test:vite": "vitest run --color --coverage",
     "typecheck": "tsc --noEmit --project tsconfig.json",
     "version:patch": "yarn version --new-version patch",
     "version:minor": "yarn version --new-version minor",
@@ -81,6 +82,8 @@
     "@types/jest": "^30.0.0",
     "@typescript-eslint/eslint-plugin": "^8.72.1",
     "@typescript-eslint/parser": "^8.72.1",
+    "@vitest/coverage-v8": "^5.0.5",
+    "@vitest/eslint-plugin": "^1.6.28",
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^10.1.8",
@@ -94,7 +97,9 @@
     "prettier": "^3.9.10",
     "shx": "^0.4.0",
     "ts-jest": "^29.4.15",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vite": "^8.3.5",
+    "vitest": "^5.0.5"
   },
   "resolutions": {
     "set-value": "^4.0.1"
