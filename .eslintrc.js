@@ -27,9 +27,16 @@ module.exports = {
     ecmaVersion: "latest",
   },
   settings: {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"],
+    },
     "import/resolver": {
       node: {
         extensions: [".js", ".jsx", ".ts", ".tsx"],
+      },
+      typescript: {
+        alwaysTryTypes: true,
+        project: ["./tsconfig.json", "./tsconfig.build.json"],
       },
     },
   },
