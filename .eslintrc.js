@@ -18,18 +18,24 @@ module.exports = {
     ],
   },
   parser: "@typescript-eslint/parser",
-  plugins: ["jest", "@typescript-eslint"],
+  plugins: ["@vitest", "@typescript-eslint"],
   env: {
-    "jest/globals": true,
     node: true,
   },
   parserOptions: {
     ecmaVersion: "latest",
   },
   settings: {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"],
+    },
     "import/resolver": {
       node: {
         extensions: [".js", ".jsx", ".ts", ".tsx"],
+      },
+      typescript: {
+        alwaysTryTypes: true,
+        project: ["./tsconfig.json", "./tsconfig.build.json"],
       },
     },
   },
@@ -39,6 +45,16 @@ module.exports = {
       parser: "@typescript-eslint/parser",
       plugins: ["@typescript-eslint"],
       extends: ["plugin:@typescript-eslint/recommended"],
+    },
+    {
+      files: ["test/**/*.{spec,test}.{ts,tsx}"],
+      extends: ["plugin:@vitest/legacy-recommended"],
+    },
+    {
+      files: ["vitest.config.mts"],
+      rules: {
+        "import/no-extraneous-dependencies": "off",
+      },
     },
   ],
 };

@@ -1,4 +1,5 @@
-import { CloudFormation } from "@aws-sdk/client-cloudformation";
+import { CloudFormation, CloudFormationServiceException } from "@aws-sdk/client-cloudformation";
+import { afterEach, beforeEach, describe, expect, it, type MockInstance, vi } from "vitest";
 import cfnWaitReady from "../../src";
 
 const completeEvent = {
@@ -10,11 +11,11 @@ const completeEvent = {
 };
 
 describe("Stack is ready", () => {
-  const describeStacks = jest.fn().mockResolvedValue({
+  const describeStacks = vi.fn().mockResolvedValue({
     Stacks: [{ StackStatus: "UPDATE_COMPLETE" }],
   });
 
-  const describeStackEvents = jest.fn().mockResolvedValue({
+  const describeStackEvents = vi.fn().mockResolvedValue({
     StackEvents: [completeEvent],
   });
 
@@ -27,12 +28,12 @@ describe("Stack is ready", () => {
 });
 
 describe("Stack is updating", () => {
-  const describeStacks = jest.fn().mockResolvedValue({
+  const describeStacks = vi.fn().mockResolvedValue({
     Stacks: [{ StackStatus: "UPDATE_IN_PROGRESS" }],
   });
 
   describe("completing in first polling cycle", () => {
-    const describeStackEvents = jest.fn().mockResolvedValue({
+    const describeStackEvents = vi.fn().mockResolvedValue({
       StackEvents: [completeEvent],
     });
 
@@ -57,19 +58,19 @@ describe("Stack is updating", () => {
     const stackEvents2 = {
       StackEvents: [completeEvent, incompleteEvent],
     };
-    const describeStackEvents = jest.fn().mockResolvedValueOnce(stackEvents1).mockResolvedValueOnce(stackEvents2);
+    const describeStackEvents = vi.fn().mockResolvedValueOnce(stackEvents1).mockResolvedValueOnce(stackEvents2);
 
     const flushPromises = () => new Promise(setImmediate);
 
     it("sleeps once", async () => {
-      jest.useFakeTimers({ advanceTimers: true });
-      jest.spyOn(global, "setTimeout");
+      vi.useFakeTimers({ shouldAdvanceTime: true });
+      vi.spyOn(globalThis, "setTimeout");
       const cloudFormation = { describeStacks, describeStackEvents } as unknown as CloudFormation;
       const params = { StackName: "stack-name" };
       const result = cfnWaitReady(cloudFormation, params);
       await flushPromises();
       await flushPromises();
-      jest.runAllTimers();
+      vi.runAllTimers();
       expect(setTimeout).toHaveBeenCalledTimes(1);
       await result;
     });
@@ -78,10 +79,15 @@ describe("Stack is updating", () => {
 
 describe("Stack is missing", () => {
   it("returns without describing events", async () => {
-    const error: Error & { code: unknown } = { ...new Error("Stack with id MyStackName does not exist"), code: null };
-    error.code = "ValidationError";
-    const describeStacks = jest.fn().mockRejectedValue(error);
-    const describeStackEvents = jest.fn().mockResolvedValueOnce(error);
+    // Shape of the AWS SDK v3 error: the error code is carried in `name`
+    const error = new CloudFormationServiceException({
+      name: "ValidationError",
+      $fault: "client",
+      $metadata: { httpStatusCode: 400 },
+      message: "Stack with id MyStackName does not exist",
+    });
+    const describeStacks = vi.fn().mockRejectedValue(error);
+    const describeStackEvents = vi.fn().mockResolvedValueOnce(error);
 
     const cloudFormation = { describeStacks, describeStackEvents } as unknown as CloudFormation;
     const params = { StackName: "stack-name" };
@@ -94,9 +100,9 @@ describe("API has unexpected error", () => {
   const error: Error & { code: unknown } = { ...new Error("Internal server error"), code: null };
   error.code = "InternalServerError";
 
-  const describeStacks = jest.fn().mockRejectedValue(error);
+  const describeStacks = vi.fn().mockRejectedValue(error);
 
-  const describeStackEvents = jest.fn().mockRejectedValueOnce(error);
+  const describeStackEvents = vi.fn().mockRejectedValueOnce(error);
 
   it("rejects", () => {
     const cloudFormation = { describeStacks, describeStackEvents } as unknown as CloudFormation;
@@ -106,20 +112,20 @@ describe("API has unexpected error", () => {
 });
 
 describe("Stack describeStacks returns no stacks", () => {
-  let logSpy: jest.SpyInstance;
+  let logSpy: MockInstance<typeof console.log>;
 
   beforeEach(() => {
-    logSpy = jest.spyOn(console, "log").mockImplementation(() => undefined);
+    logSpy = vi.spyOn(console, "log").mockImplementation(() => undefined);
   });
 
   afterEach(() => {
     logSpy.mockRestore();
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   it("handles Stacks: [] (empty array) and returns without describing events", async () => {
-    const describeStacks = jest.fn().mockResolvedValue({ Stacks: [] });
-    const describeStackEvents = jest.fn();
+    const describeStacks = vi.fn().mockResolvedValue({ Stacks: [] });
+    const describeStackEvents = vi.fn();
 
     const cloudFormation = { describeStacks, describeStackEvents } as unknown as CloudFormation;
     const params = { StackName: "stack-name" };
@@ -132,8 +138,8 @@ describe("Stack describeStacks returns no stacks", () => {
 
   it("handles Stacks: undefined (missing field) and returns without describing events", async () => {
     // Simulate AWS returning no Stacks field at all
-    const describeStacks = jest.fn().mockResolvedValue({});
-    const describeStackEvents = jest.fn();
+    const describeStacks = vi.fn().mockResolvedValue({});
+    const describeStackEvents = vi.fn();
 
     const cloudFormation = { describeStacks, describeStackEvents } as unknown as CloudFormation;
     const params = { StackName: "stack-name" };
@@ -145,8 +151,8 @@ describe("Stack describeStacks returns no stacks", () => {
   });
 
   it("handles Stacks: null and returns without describing events", async () => {
-    const describeStacks = jest.fn().mockResolvedValue({ Stacks: null });
-    const describeStackEvents = jest.fn();
+    const describeStacks = vi.fn().mockResolvedValue({ Stacks: null });
+    const describeStackEvents = vi.fn();
 
     const cloudFormation = { describeStacks, describeStackEvents } as unknown as CloudFormation;
     const params = { StackName: "stack-name" };
@@ -165,12 +171,12 @@ describe("Coverage for nullish/optional branches", () => {
     });
 
   afterEach(() => {
-    jest.useRealTimers();
-    jest.restoreAllMocks();
+    vi.useRealTimers();
+    vi.restoreAllMocks();
   });
 
   it("covers stackStatus ?? null when StackStatus is undefined", async () => {
-    const describeStacks = jest.fn().mockResolvedValue({
+    const describeStacks = vi.fn().mockResolvedValue({
       Stacks: [{}],
     });
 
@@ -182,11 +188,11 @@ describe("Coverage for nullish/optional branches", () => {
       ResourceStatusReason: null,
     };
 
-    const describeStackEvents = jest.fn().mockResolvedValue({
+    const describeStackEvents = vi.fn().mockResolvedValue({
       StackEvents: [completeEvent1],
     });
 
-    jest.spyOn(console, "log").mockImplementation(() => undefined);
+    vi.spyOn(console, "log").mockImplementation(() => undefined);
 
     const cloudFormation = { describeStacks, describeStackEvents } as unknown as CloudFormation;
     await expect(cfnWaitReady(cloudFormation, { StackName: "stack-name" })).resolves.toBeUndefined();
@@ -196,7 +202,7 @@ describe("Coverage for nullish/optional branches", () => {
   });
 
   it("covers StackEvents undefined => events?.reverse() ?? []", async () => {
-    const describeStacks = jest.fn().mockResolvedValue({
+    const describeStacks = vi.fn().mockResolvedValue({
       Stacks: [{ StackStatus: "UPDATE_IN_PROGRESS" }],
     });
 
@@ -208,14 +214,14 @@ describe("Coverage for nullish/optional branches", () => {
       ResourceStatusReason: null,
     };
 
-    const describeStackEvents = jest
+    const describeStackEvents = vi
       .fn()
       .mockResolvedValueOnce({ StackEvents: undefined })
       .mockResolvedValueOnce({ StackEvents: [completeStackEvent] });
 
-    jest.spyOn(console, "log").mockImplementation(() => undefined);
+    vi.spyOn(console, "log").mockImplementation(() => undefined);
 
-    jest.useFakeTimers({ advanceTimers: true });
+    vi.useFakeTimers({ shouldAdvanceTime: true });
 
     const cloudFormation = { describeStacks, describeStackEvents } as unknown as CloudFormation;
 
@@ -226,7 +232,7 @@ describe("Coverage for nullish/optional branches", () => {
     await flushPromises();
 
     // release the internal sleep(10000)
-    jest.advanceTimersByTime(10_000);
+    vi.advanceTimersByTime(10_000);
 
     // allow second poll to run and resolve
     await flushPromises();
@@ -237,7 +243,7 @@ describe("Coverage for nullish/optional branches", () => {
   });
 
   it("covers ResourceStatus ?? null and EventId ?? null", async () => {
-    const describeStacks = jest.fn().mockResolvedValue({
+    const describeStacks = vi.fn().mockResolvedValue({
       Stacks: [{ StackStatus: "UPDATE_IN_PROGRESS" }],
     });
 
@@ -259,14 +265,14 @@ describe("Coverage for nullish/optional branches", () => {
       ResourceStatusReason: null,
     };
 
-    const describeStackEvents = jest
+    const describeStackEvents = vi
       .fn()
       .mockResolvedValueOnce({ StackEvents: [missingFieldsStackEvent] })
       .mockResolvedValueOnce({ StackEvents: [completeStackEvent, missingFieldsStackEvent] });
 
-    jest.spyOn(console, "log").mockImplementation(() => undefined);
+    vi.spyOn(console, "log").mockImplementation(() => undefined);
 
-    jest.useFakeTimers({ advanceTimers: true });
+    vi.useFakeTimers({ shouldAdvanceTime: true });
 
     const cloudFormation = { describeStacks, describeStackEvents } as unknown as CloudFormation;
 
@@ -277,7 +283,7 @@ describe("Coverage for nullish/optional branches", () => {
     await flushPromises();
 
     // release internal sleep(10000)
-    jest.advanceTimersByTime(10_000);
+    vi.advanceTimersByTime(10_000);
 
     // let second poll resolve and finish
     await flushPromises();

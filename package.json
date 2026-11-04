@@ -6,7 +6,7 @@
   "author": "Cumulus Digital Systems",
   "license": "MIT",
   "engines": {
-    "node": "^20.0.0 || >=21.0.0"
+    "node": "^24.22.1 || >=26.12.1"
   },
   "main": "lib/index.js",
   "bin": "bin/aws-cloudformation-wait-ready.js",
@@ -17,13 +17,14 @@
   "scripts": {
     "aws-cloudformation-wait-ready": "node bin/aws-cloudformation-wait-ready.js",
     "build": "yarn run build:license-checker && yarn compile",
-    "compile": "tsc && tsc -p tsconfig-tests.json",
+    "compile": "tsc --build tsconfig.build.json --verbose",
     "build:license-checker": "license-checker --csv --out var/licenses.csv",
     "clean": "shx rm -rf lib",
     "flow": "echo this is not a flow project",
     "git:commit": "git add package.json .yarn/versions && git commit -m v${npm_package_version}",
     "git:push": "git push --follow-tags",
     "git:tag": "git tag -a v${npm_package_version} -m v${npm_package_version}",
+    "knip": "knip --config knip.config.ts",
     "prepack": "yarn run build",
     "prerelease": "yarn version apply && yarn run version:feature $0",
     "publish:patch": "yarn version patch && yarn publish:sync",
@@ -32,10 +33,12 @@
     "publish:prepatch": "yarn run version:prepatch && yarn run git:push",
     "publish:prerelease": "yarn npm publish",
     "publish:sync": "yarn run git:commit && yarn run git:tag && yarn git:push",
-    "test": "yarn run test:jest && yarn run test:lint && yarn run test:prettier",
-    "test:jest": "jest --color",
-    "test:lint": "yarn run build && eslint src test",
-    "test:prettier": "prettier --list-different \"{src,test}/**/*.{js,jsx,yml,ts}\" \"*.{js,yml}\"",
+    "test": "yarn run knip && yarn run typecheck && yarn run test:style && yarn run test:vite",
+    "test:lint": "eslint \"{src,test}/**/*.{cjs,js,jsx,mjs,cts,ts,mts,tsx,yml}\" \"*.{cjs,js,mjs,cts,mts,ts,yml}\"",
+    "test:prettier": "prettier --list-different \"{src,test}/**/*.{cjs,js,jsx,mjs,cts,ts,mts,tsx,yml}\" \"*.{cjs,js,mjs,cts,mts,ts,yml}\"",
+    "test:style": "yarn run test:lint && yarn run test:prettier",
+    "test:vite": "vitest run --color --coverage",
+    "typecheck": "tsc --noEmit --project tsconfig.json",
     "version:patch": "yarn version --new-version patch",
     "version:minor": "yarn version --new-version minor",
     "version:major": "yarn version --new-version major",
@@ -43,55 +46,30 @@
     "version:prepatch": "yarn version --new-version prepatch",
     "version:prerelease": "yarn version ${npm_package_version}"
   },
-  "jest": {
-    "verbose": true,
-    "collectCoverage": true,
-    "collectCoverageFrom": [
-      "src/**/*.ts"
-    ],
-    "testEnvironment": "node",
-    "coverageDirectory": "var/coverage/test",
-    "coverageThreshold": {
-      "global": {
-        "statements": 100,
-        "branches": 100,
-        "functions": 100,
-        "lines": 100
-      }
-    },
-    "transform": {
-      "^.+\\.tsx?$": [
-        "ts-jest",
-        {
-          "tsconfig": "tsconfig.json",
-          "useESM": true
-        }
-      ]
-    }
-  },
   "dependencies": {
-    "@aws-sdk/client-cloudformation": "^3.972.0",
+    "@aws-sdk/client-cloudformation": "^3.1161.0",
     "chalk": "^3.0.0",
     "minimist": "^1.2.8"
   },
   "devDependencies": {
-    "@types/jest": "^30.0.0",
-    "@typescript-eslint/eslint-plugin": "^8.53.1",
-    "@typescript-eslint/parser": "^8.53.1",
+    "@types/node": "^24.19.2",
+    "@typescript-eslint/eslint-plugin": "^8.72.1",
+    "@typescript-eslint/parser": "^8.72.1",
+    "@vitest/coverage-v8": "^5.0.5",
+    "@vitest/eslint-plugin": "^1.6.28",
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-prettier": "^8.10.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-import-resolver-typescript": "^4.4.5",
     "eslint-plugin-import": "^2.32.0",
-    "eslint-plugin-jest": "^28.14.0",
-    "eslint-plugin-prettier": "^5.5.5",
-    "git-describe": "^4.1.1",
-    "jest": "^30.2.0",
+    "eslint-plugin-prettier": "^5.5.7",
+    "knip": "^6.44.1",
     "license-checker": "^25.0.1",
-    "npm-run-all": "^4.1.5",
-    "prettier": "^3.8.0",
+    "prettier": "^3.9.10",
     "shx": "^0.4.0",
-    "ts-jest": "^29.4.6",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vite": "^8.3.5",
+    "vitest": "^5.0.5"
   },
   "resolutions": {
     "set-value": "^4.0.1"

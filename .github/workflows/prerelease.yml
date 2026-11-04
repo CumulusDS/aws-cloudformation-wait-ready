@@ -7,7 +7,6 @@ on:
       - "dependabot/**"
     paths:
       - .github/workflows/prerelease.yml
-      - .babelrc.js
       - .eslintrc.js
       - .flowconfig
       - .yarnrc.yml
@@ -16,6 +15,8 @@ on:
       - yarn.lock
       - src/**/*
       - test/**/*
+      - tsconfig.build.json
+      - tsconfig.json
       - README.md
       - .yarn/versions/*
 jobs:
@@ -24,5 +25,5 @@ jobs:
     uses: CumulusDS/workflows-public/.github/workflows/package-prerelease.yml@master
     secrets: inherit
     with:
-      nodeVersion: 20
+      nodeVersionFile: ".nvmrc"
       npmjsPublishToken: "NPM_PUBLISH_TOKEN_AWS_CLOUDFORMATION_WAIT_READY"
