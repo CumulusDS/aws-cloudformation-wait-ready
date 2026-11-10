@@ -45,14 +45,14 @@ async function doWait(cloudFormation: CloudFormation, params: { StackName: strin
     const response = await cloudFormation.describeStacks({ StackName });
     const stacks = response.Stacks;
     if (stacks == null || stacks.length === 0) {
-      console.log(chalk`{green Does Not Exist}`);
+      console.log(chalk.green(`Does Not Exist`));
       return;
     }
     const { StackStatus: stackStatus } = stacks[0];
 
     // Check the current status
     if (isDone(stackStatus ?? null)) {
-      console.log(chalk`{green Ready}`);
+      console.log(chalk.green(`Ready`));
       return;
     }
 
@@ -66,12 +66,15 @@ async function doWait(cloudFormation: CloudFormation, params: { StackName: strin
         const { ResourceStatusReason } = event;
 
         if (isStackEvent(event)) {
-          console.log(chalk`{bold {yellow ${event.Timestamp?.toISOString()}} ${event.ResourceStatus}}`);
+          console.log(
+            chalk.bold.yellow(`${event.Timestamp?.toISOString()} `),
+            chalk.yellow(`${event.ResourceStatus}}`),
+          );
           LatestStatus = event.ResourceStatus ?? null;
         } else {
-          console.log(chalk`{yellow ${event.Timestamp?.toISOString()}} ${event.ResourceStatus}`);
+          console.log(chalk.yellow(`${event.Timestamp?.toISOString()} `, `${event.ResourceStatus}`));
         }
-        if (ResourceStatusReason != null) console.log(chalk`${ResourceStatusReason}\n`);
+        if (ResourceStatusReason != null) console.log(chalk(`${ResourceStatusReason}\n`));
 
         LatestEventId = event.EventId ?? null;
       }
@@ -84,12 +87,12 @@ async function doWait(cloudFormation: CloudFormation, params: { StackName: strin
     // AWS SDK v3 exposes the error code as `name` (e.g. CloudFormationServiceException [ValidationError])
     if ((error as { name?: unknown } | null)?.name === "ValidationError") {
       // Stack with id MyStackName does not exist
-      console.log(chalk`{green Does Not Exist}`);
+      console.log(chalk.green(`Does Not Exist`));
     } else {
       throw error;
     }
   }
-  console.log(chalk`{green Ready}`);
+  console.log(chalk.green(`Ready`));
 }
 
 export default doWait;
